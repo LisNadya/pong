@@ -1,0 +1,27 @@
+name: Deploy Unity WebGL
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      # Setup Unity (requires a license or free personal activation)
+      - uses: game-ci/unity-builder@v2
+        with:
+          unityVersion: 2022.3.22f1 # change to your Unity version
+          targetPlatform: WebGL
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v6
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          email: ${{ secrets.UNITY_EMAIL }}
+          password: ${{ secrets.UNITY_PASSWORD }}
+          publish_dir: ./WebGLBuild # path to WebGL build folder
